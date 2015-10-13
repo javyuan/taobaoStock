@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>库存管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="index">
+		<div data-role="header">
+		</div>
+		<div role="main" class="ui-content">
+			<table>
+				<tr><td>商品名称</td><td>购买方式</td><td>物流编号</td><td>下单日期</td><td>物流状态</td></tr>
+				<tr th:each="p : ${products}">
+					<input type="hidden" class="id" value="${p.id}"/>
+					<input type="hidden" class="productId" value="${p.productId}"/>
+					<input type="hidden" class="quantity" value="${p.quantity}"/>
+			        <td th:text="${p.productName}"></td>
+			        <td th:text="(${p.buyType} == 0)? '直邮' : '转运'"></td>
+			        <td th:text="${p.tracking}"></td>
+			        <td th:text="${p.createTime}"></td>
+				    <td><select name="select-native-2" id="select-native-2" data-mini="true" th:selected="${p.trackStatus}" onchange="updateTrackStatus(${p.id},{p.productId},${p.quantity})">
+				    	<option value="0">提交订单</option>
+				        <option value="1">美亚发货</option>
+				        <option value="2">仓库收货</option>
+				        <option value="3">仓库发货</option>
+				        <option value="4">本人签收</option>
+				    </select></td>
+			        
+			    </tr>
+			</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		</div>
+		<div data-role="footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#buy">进货</a></li>
+					<li><a href="#stock">库存</a></li>
+					<li><a href="#sell">发货</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- /first page -->
+
+	<!-- second page -->
+	<div data-role="page" id="buy">
+		<div data-role="header">
+		</div>
+		<div role="main" class="ui-content">buy</div>
+		<div data-role="footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a class="ui-btn-active" href="#buy">进货</a></li>
+					<li><a href="#stock">库存</a></li>
+					<li><a href="#sell">发货</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- /second page -->
+
+	<!-- third page -->
+	<div data-role="page" id="stock">
+		<div data-role="header">
+		</div>
+		
+		<div role="main" class="ui-content">
+			stock
+		</div>
+		
+		<div data-role="footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#buy">进货</a></li>
+					<li><a class="ui-btn-active" href="#stock">库存</a></li>
+					<li><a href="#sell">发货</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- /third page -->
+
+	<!-- fourth page -->
+	<div data-role="page" id="sell">
+		<div data-role="header">
+		</div>
+		<div role="main" class="ui-content">sell</div>
+		<div data-role="footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#buy">进货</a></li>
+					<li><a href="#stock">库存</a></li>
+					<li><a class="ui-btn-active" href="#sell">发货</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- /fourth page -->
+
+</body>
+<script>
+$(function(){
+	//$("#select-native-2").change(function(){
+	//	alert($(this).val()+","+$(this).parent(".id").val()+","+$(this).parent(".productId").val()+","+$(this).parent(".quantity").val());
+	//});
+})
+function updateTrackStatus(id,productId,quantity){
+	$.ajax({
+        method : 'GET',
+        url : '',
+        error : function() {
+          alert("修改失败，请刷新重试！");
+        }
+      });
+}
+</script>
+</html>
