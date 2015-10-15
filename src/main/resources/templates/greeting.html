@@ -25,7 +25,7 @@
 			        <td th:text="(${p.buyType} == 0)? '直邮' : '转运'"></td>
 			        <td th:text="${p.tracking}"></td>
 			        <td th:text="${p.createTime}"></td>
-				    <td><select name="select-native-2" id="track" data-mini="true" th:selected="${p.trackStatus}">
+				    <td><select name="select-native-2" class="track" data-mini="true" th:selected="${p.trackStatus}">
 				    	<option value="0" th:selected="${p.trackStatus} == 0">提交订单</option>
 				        <option value="1" th:selected="${p.trackStatus} == 1">美亚发货</option>
 				        <option value="2" th:selected="${p.trackStatus} == 2">仓库收货</option>
@@ -143,7 +143,7 @@
 </body>
 <script>
 $(function(){
-	$("#track").change(function(){
+	$(".track").change(function(){
 		var id=$(this).parents("td").parent().find(".id").val();
 		var productId=$(this).parents("td").parent().find(".productId").val();
 		var quantity=$(this).parents("td").parent().find(".quantity").val();
