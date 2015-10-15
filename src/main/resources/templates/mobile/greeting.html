@@ -11,36 +11,30 @@
 <body>
 	<div data-role="page" id="index">
 		<div data-role="header">
+			<a class="ui-btn ui-icon-back ui-btn-icon-left" href="#index">首页</a>
+			<h1 id="section"></h1>
 		</div>
 		<div role="main" class="ui-content">
-			<table>
-				<tr><td>商品名称</td><td>购买方式</td><td>物流编号</td><td>下单日期</td><td>物流状态</td></tr>
-				<tr th:each="p : ${products}">
-					<input type="hidden" class="id" value="${p.id}"/>
-					<input type="hidden" class="productId" value="${p.productId}"/>
-					<input type="hidden" class="quantity" value="${p.quantity}"/>
+			<table width="100%">
+				<tr><td>名称</td><td>方式</td><td>物流</td><td>日期</td><td>状态</td></tr>
+				<tr th:each="p : ${buyList}">
+					<input type="hidden" class="id" th:value="${p.id}"/>
+					<input type="hidden" class="productId" th:value="${p.productId}"/>
+					<input type="hidden" class="quantity" th:value="${p.quantity}"/>
 			        <td th:text="${p.productName}"></td>
 			        <td th:text="(${p.buyType} == 0)? '直邮' : '转运'"></td>
 			        <td th:text="${p.tracking}"></td>
 			        <td th:text="${p.createTime}"></td>
-				    <td><select name="select-native-2" id="select-native-2" data-mini="true" th:selected="${p.trackStatus}" onchange="updateTrackStatus(${p.id},{p.productId},${p.quantity})">
-				    	<option value="0">提交订单</option>
-				        <option value="1">美亚发货</option>
-				        <option value="2">仓库收货</option>
-				        <option value="3">仓库发货</option>
-				        <option value="4">本人签收</option>
+				    <td><select name="select-native-2" id="select-native-2" data-mini="true" th:selected="${p.trackStatus}">
+				    	<option value="0" th:selected="${p.trackStatus} == 0">提交订单</option>
+				        <option value="1" th:selected="${p.trackStatus} == 1">美亚发货</option>
+				        <option value="2" th:selected="${p.trackStatus} == 2">仓库收货</option>
+				        <option value="3" th:selected="${p.trackStatus} == 3">仓库发货</option>
+				        <option value="4" th:selected="${p.trackStatus} == 4">本人签收</option>
 				    </select></td>
 			        
 			    </tr>
 			</table>
-		
-		
-		
-		
-		
-		
-		
-		
 		</div>
 		<div data-role="footer">
 			<div data-role="navbar">
@@ -57,8 +51,27 @@
 	<!-- second page -->
 	<div data-role="page" id="buy">
 		<div data-role="header">
+			<a class="ui-btn ui-icon-back ui-btn-icon-left" href="#index">首页</a>
+			<h1 id="section"></h1>
 		</div>
-		<div role="main" class="ui-content">buy</div>
+		<div role="main" class="ui-content">
+			<table>
+				<tr><td>商品名称:</td><td><select name="select-native-2" id="buy_pid" data-mini="true"><option th:each="p : ${productList}" th:value="${p.productId}" th:text="${p.productName}"></option></select></td></tr>
+				<tr><td>单价(美元):</td><td><input id="buy_up" type="text" /></td></tr>
+				<tr><td>数量:</td><td><input id="buy_q" type="text" value="1"/></td></tr>
+				<tr><td>运费(人民币):</td><td><input id="buy_s" type="text" /></td></tr>
+				<tr><td>物流单号:</td><td><input id="buy_t" type="text" /></td></tr>
+				<tr><td>购买方式:</td><td>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+				        <input name="radio-choice-h-2" id="radio-choice-h-2a" type="radio" checked="checked" value="0" />
+				        <label for="radio-choice-h-2a">直邮</label>
+				        <input name="radio-choice-h-2" id="radio-choice-h-2b" type="radio" value="1" />
+				        <label for="radio-choice-h-2b">转运</label>
+				    </fieldset>
+				</td></tr>
+				<tr><td></td><td><input id="buy_submit" type="button" value="提交" /></td></tr>
+			</table>
+		</div>
 		<div data-role="footer">
 			<div data-role="navbar">
 				<ul>
@@ -74,10 +87,18 @@
 	<!-- third page -->
 	<div data-role="page" id="stock">
 		<div data-role="header">
+			<a class="ui-btn ui-icon-back ui-btn-icon-left" href="#index">首页</a>
+			<h1 id="section"></h1>
 		</div>
 		
 		<div role="main" class="ui-content">
-			stock
+			<table width="100%">
+				<tr><td>名称</td><td>库存</td></tr>
+				<tr th:each="p : ${stockList}">
+					<td th:text="${p.productName}"></td>
+			        <td th:text="${p.stock}"></td>
+				</tr>
+			</table>
 		</div>
 		
 		<div data-role="footer">
@@ -95,8 +116,18 @@
 	<!-- fourth page -->
 	<div data-role="page" id="sell">
 		<div data-role="header">
+			<a class="ui-btn ui-icon-back ui-btn-icon-left" href="#index">首页</a>
+			<h1 id="section"></h1>
 		</div>
-		<div role="main" class="ui-content">sell</div>
+		<div role="main" class="ui-content">
+			<table>
+				<tr><td>商品名称:</td><td><select name="select-native-2" id="sell_pid" data-mini="true"><option th:each="p : ${productList}" th:value="${p.productId}" th:text="${p.productName}"></option></select></td></tr>
+				<tr><td>单价:</td><td><input id="sell_up" type="text" /></td></tr>
+				<tr><td>数量:</td><td><input id="sell_q" type="text" value="1"/></td></tr>
+				<tr><td>运费:</td><td><input id="sell_s" type="text" /></td></tr>
+				<tr><td></td><td><input id="sell_submit" type="button" value="提交" /></td></tr>
+			</table>
+		</div>
 		<div data-role="footer">
 			<div data-role="navbar">
 				<ul>
@@ -112,18 +143,79 @@
 </body>
 <script>
 $(function(){
-	//$("#select-native-2").change(function(){
-	//	alert($(this).val()+","+$(this).parent(".id").val()+","+$(this).parent(".productId").val()+","+$(this).parent(".quantity").val());
-	//});
+	$("select").change(function(){
+		var id=$(this).parents("td").parent().find(".id").val();
+		var productId=$(this).parents("td").parent().find(".productId").val();
+		var quantity=$(this).parents("td").parent().find(".quantity").val();
+		var trackStatus=$(this).val();
+		console.log(id+","+productId+","+quantity+","+trackStatus);
+		var param = {};
+		param.id=id;
+		param.pid=productId;
+		param.q=quantity;
+		param.t=trackStatus;
+		$.ajax({
+	        method : 'GET',
+	        url : "/updateTrackStatus",
+	        data : param,
+	        error : function() {
+	          alert("修改失败，请刷新重试！");
+	        }
+	     });
+	});
+	
+	$("#buy_submit").click(function(){
+		var param = {};
+		param.productId = $("#buy_pid").val();
+		param.productName = $("#buy_pid :selected").text();
+		param.unitPrice = $("#buy_up").val();
+		param.quantity = $("#buy_q").val();
+		param.unitShipping = $("#buy_s").val();
+		param.tracking = $("#buy_t").val();
+		param.buyType = $('input[name="radio-choice-h-2"]:checked').val();
+		console.log(param);
+		if(param.productId == "" || param.productName == "" || param.unitPrice == "" || param.quantity == "" || param.unitShipping == "" || param.tracking == "" || param.buyType == ""){
+			return;
+		}
+		$.ajax({
+	        method : 'GET',
+	        url : "/buy",
+	        data : param,
+	        success : function() {
+	        	$("#buy_up").val("");
+	        	$("#buy_s").val("");
+	        	$("#buy_t").val("");
+	        },
+	        error : function() {
+	          alert("提交失败，请刷新重试！");
+	        }
+	     });
+	});
+	
+	$("#sell_submit").click(function(){
+		var param = {};
+		param.productId = $("#sell_pid").val();
+		param.productName = $("#sell_pid :selected").text();
+		param.unitPrice = $("#sell_up").val();
+		param.quantity = $("#sell_q").val();
+		param.unitShipping = $("#sell_s").val();
+		console.log(param);
+		if(param.productId == "" || param.productName == "" || param.unitPrice == "" || param.quantity == "" || param.unitShipping == ""){
+			return;
+		}
+		$.ajax({
+	        method : 'GET',
+	        url : "/sell",
+	        data : param,
+	        success : function() {
+	        	$("#sell_up").val("");
+	        	$("#sell_s").val("");
+	        },
+	        error : function() {
+	          alert("提交失败，请刷新重试！");
+	        }
+	     });
+	});
 })
-function updateTrackStatus(id,productId,quantity){
-	$.ajax({
-        method : 'GET',
-        url : '',
-        error : function() {
-          alert("修改失败，请刷新重试！");
-        }
-      });
-}
 </script>
 </html>

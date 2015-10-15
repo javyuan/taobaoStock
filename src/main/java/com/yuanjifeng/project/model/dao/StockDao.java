@@ -16,7 +16,6 @@ import com.yuanjifeng.project.model.bean.StockBean;
 @Repository
 public class StockDao extends BaseDao{
 	
-	
 	/**
 	 * 查库存
 	 * @return
@@ -43,10 +42,11 @@ public class StockDao extends BaseDao{
 	 */
 	public void addStock(BuyBean bean) {
 		SqlParameterSource source = new BeanPropertySqlParameterSource(bean);
-		StockBean stock = jdbcTemplate.queryForObject(queryStockSql, source, new StockMapper());
-		if (stock == null) {
+		List<StockBean> stockList = jdbcTemplate.query(queryStockSql, source, new StockMapper());
+		if (stockList.size() == 0) {
 			jdbcTemplate.update(insertStockSql, source);
 		}else {
+			StockBean stock = stockList.get(0);
 			stock.setStock(stock.getStock()+bean.getQuantity());
 			source = new BeanPropertySqlParameterSource(stock);
 			jdbcTemplate.update(updateStockSql, source);
@@ -70,6 +70,6 @@ public class StockDao extends BaseDao{
 	
 	private static final String queryStockSql = "select * from stock where product_id = :productId and status = 1";
 	private static final String queryAllSql = "select * from stock where status = 1";
-	private static final String insertStockSql = "INSERT INTO `taobao`.`stock` (`product_id`, `product_name`, `stock`, `status`, `create_time`, `update_time`, `update_user`) VALUES (:product_id, :product_name, :quantity, 1, sysdate(), sysdate(), :update_user);";
+	private static final String insertStockSql = "INSERT INTO `taobao`.`stock` (`product_id`, `product_name`, `stock`, `status`, `create_time`, `update_time`, `update_user`) VALUES (:productId, :productName, :quantity, 1, sysdate(), sysdate(), :updateUser);";
 	private static final String updateStockSql = "update `taobao`.`stock` set `stock` = :stock, `update_time` = sysdate() where `id` = :id and `status` = 1";
 }

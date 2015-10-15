@@ -49,12 +49,12 @@ public class BuyDao extends BaseDao{
 	 */
 	public void tracking(BuyBean bean){
 		int trackStatus = bean.getTrackStatus();
-		if (trackStatus == TrackStatusEnum.Signed.getValue()) {
-			// update stock table
-			stockDao.addStock(bean);
-		}
 		SqlParameterSource source = new BeanPropertySqlParameterSource(bean);
 		jdbcTemplate.update(trackingSql, source);
+		if (trackStatus == TrackStatusEnum.Signed.getValue()) {
+			bean = this.querySingle(bean.getId());
+			stockDao.addStock(bean);
+		}
 	}
 	
 	/**
@@ -71,6 +71,13 @@ public class BuyDao extends BaseDao{
 			cost = cost + (int)map.get("unit_cost");
 		}
 		return cost/costList.size();
+	}
+	
+	public BuyBean querySingle(int id) {
+		HashMap<String,Integer> paramMap = new HashMap<String,Integer>(1);
+		paramMap.put("id", id);
+		BuyBean bean = jdbcTemplate.queryForObject(queryIdSql, paramMap, new BuyMapper());
+		return bean;
 	}
 	
 	private static final class BuyMapper implements RowMapper<BuyBean> {
@@ -101,8 +108,11 @@ public class BuyDao extends BaseDao{
 		this.stockDao = stockDao;
 	}
 
-	private static final String buySql = "INSERT INTO `taobao`.`buy` (`product_id`, `product_name`, `buy_type`, `unit_price`, `unit_shipping`, `quantity`, `total`, `unit_cost`, `tracking`, `track_status`, `status`, `create_time`, `update_time`, `update_user`) VALUES (:product_id, :product_name, :buy_type, :unit_price, :unit_shipping, :quantity, :total, :unit_cost, :tracking, 0, '1', sysdate(), sysdate(), :update_user)";
+	private static final String buySql = "INSERT INTO `taobao`.`buy` (`product_id`, `product_name`, `buy_type`, `unit_price`, `unit_shipping`, `quantity`, `total`, `unit_cost`, `tracking`, `track_status`, `status`, `create_time`, `update_time`, `update_user`) VALUES (:productId, :productName, :buyType, :unitPrice, :unitShipping, :quantity, :total, :unitCost, :tracking, 0, '1', sysdate(), sysdate(), :updateUser)";
+	private static final String queryIdSql = "select * from buy where id = :id and status = 1";
 	private static final String queryShippedSql = "select * from buy where track_status != '4' and status = 1";
 	private static final String queryCostSql = "select unit_cost from buy where product_id = :productId and status = 1";
 	private static final String trackingSql = "update `taobao`.`buy` set `track_status` = :trackStatus, `update_time` = sysdate() where `id` = :id and `status` = 1";
+
+
 }
