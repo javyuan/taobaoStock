@@ -16,12 +16,13 @@
 		</div>
 		<div role="main" class="ui-content">
 			<table width="100%">
-				<tr><td>名称</td><td>方式</td><td>物流</td><td>日期</td><td>状态</td></tr>
+				<tr><td>名称</td><td>数量</td><td>方式</td><td>物流</td><td>日期</td><td>状态</td></tr>
 				<tr th:each="p : ${buyList}">
 					<input type="hidden" class="id" th:value="${p.id}"/>
 					<input type="hidden" class="productId" th:value="${p.productId}"/>
 					<input type="hidden" class="quantity" th:value="${p.quantity}"/>
 			        <td th:text="${p.productName}"></td>
+			        <td th:text="${p.quantity}"></td>
 			        <td th:text="(${p.buyType} == 0)? '直邮' : '转运'"></td>
 			        <td th:text="${p.tracking}"></td>
 			        <td th:text="${p.createTime}"></td>
