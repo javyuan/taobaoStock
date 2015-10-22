@@ -8,6 +8,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,9 +29,8 @@ public class XSSFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
-		// TODO 完成xss过滤
 		log.info("do xssfilter !");
-		chain.doFilter(req, resp);
+		chain.doFilter(new XSSRequestWrapper((HttpServletRequest) req),resp);
 	}
 
 	@Override
