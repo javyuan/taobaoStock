@@ -232,10 +232,12 @@ $(function(){
 	});
 })
 function hideTotal(){
-	$('#buy_total').hide();
+	var traget=document.getElementById("buy_total");
+	traget.style.display="none";
 }
 function showTotal(){
-	$('#buy_total').show();
+	var traget=document.getElementById("buy_total");
+	traget.style.display="";
 }
 </script>
 </html>
