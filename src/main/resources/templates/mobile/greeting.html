@@ -16,13 +16,14 @@
 		</div>
 		<div role="main" class="ui-content">
 			<table width="100%">
-				<tr><td>名称</td><td>数量</td><td>方式</td><td>物流</td><td>日期</td><td>状态</td></tr>
+				<tr><td>名称</td><td>数量</td><td>成本</td><td>方式</td><td>物流</td><td>日期</td><td>状态</td></tr>
 				<tr th:each="p : ${buyList}">
 					<input type="hidden" class="id" th:value="${p.id}"/>
 					<input type="hidden" class="productId" th:value="${p.productId}"/>
 					<input type="hidden" class="quantity" th:value="${p.quantity}"/>
 			        <td th:text="${p.productName}"></td>
 			        <td th:text="${p.quantity}"></td>
+			        <td th:text="${p.unitCost}"></td>
 			        <td th:text="(${p.buyType} == 0)? '直邮' : '转运'"></td>
 			        <td th:text="${p.tracking}"></td>
 			        <td th:text="${p.createTime}"></td>
@@ -58,18 +59,19 @@
 		<div role="main" class="ui-content">
 			<table>
 				<tr><td>商品名称:</td><td><select name="select-native-2" id="buy_pid" data-mini="true"><option th:each="p : ${productList}" th:value="${p.productId}" th:text="${p.productName}"></option></select></td></tr>
-				<tr><td>单价(美元):</td><td><input id="buy_up" type="text" /></td></tr>
-				<tr><td>数量:</td><td><input id="buy_q" type="text" value="1"/></td></tr>
-				<tr><td>运费(人民币):</td><td><input id="buy_s" type="text" /></td></tr>
-				<tr><td>物流单号:</td><td><input id="buy_t" type="text" /></td></tr>
 				<tr><td>购买方式:</td><td>
 					<fieldset data-role="controlgroup" data-type="horizontal">
 				        <input name="radio-choice-h-2" id="radio-choice-h-2a" type="radio" checked="checked" value="0" />
-				        <label for="radio-choice-h-2a">直邮</label>
+				        <label for="radio-choice-h-2a" onclick="javascript:$('#buy_total').show();">直邮</label>
 				        <input name="radio-choice-h-2" id="radio-choice-h-2b" type="radio" value="1" />
-				        <label for="radio-choice-h-2b">转运</label>
+				        <label for="radio-choice-h-2b" onclick="javascript:$('#buy_total').hide();">转运</label>
 				    </fieldset>
 				</td></tr>
+				<tr><td>单价(美元):</td><td><input id="buy_up" type="text" /></td></tr>
+				<tr><td>数量:</td><td><input id="buy_q" type="text" value="1"/></td></tr>
+				<tr id="buy_total"><td>总价(美元):</td><td><input id="buy_s" type="text" /></td></tr>
+				<tr><td>物流单号:</td><td><input id="buy_t" type="text" /></td></tr>
+				
 				<tr><td></td><td><input id="buy_submit" type="button" value="提交" /></td></tr>
 			</table>
 		</div>
@@ -145,16 +147,20 @@
 <script>
 $(function(){
 	$(".track").change(function(){
-		var id=$(this).parents("td").parent().find(".id").val();
-		var productId=$(this).parents("td").parent().find(".productId").val();
-		var quantity=$(this).parents("td").parent().find(".quantity").val();
-		var trackStatus=$(this).val();
-		console.log(id+","+productId+","+quantity+","+trackStatus);
 		var param = {};
-		param.id=id;
-		param.pid=productId;
-		param.q=quantity;
-		param.t=trackStatus;
+		param.id=$(this).parents("td").parent().find(".id").val();
+		param.pid=$(this).parents("td").parent().find(".productId").val();
+		param.q=$(this).parents("td").parent().find(".quantity").val();
+		param.t=$(this).val();
+		if(param.t == '3'){
+			param.s = prompt("请输入转运费用");
+			if(param.s == '' || param.s == null){
+				alert("转运费用不能为空");
+				window.location.reload();
+				return;
+			}
+		}
+		console.log(param);
 		$.ajax({
 	        method : 'GET',
 	        url : "/updateTrackStatus",
@@ -171,11 +177,17 @@ $(function(){
 		param.productName = $("#buy_pid :selected").text();
 		param.unitPrice = $("#buy_up").val();
 		param.quantity = $("#buy_q").val();
-		param.unitShipping = $("#buy_s").val();
+		param.total = $("#buy_s").val();
 		param.tracking = $("#buy_t").val();
 		param.buyType = $('input[name="radio-choice-h-2"]:checked').val();
 		console.log(param);
-		if(param.productId == "" || param.productName == "" || param.unitPrice == "" || param.quantity == "" || param.unitShipping == "" || param.tracking == "" || param.buyType == ""){
+		
+		// buyType = 1 ---> zhuanyun
+		if(param.buyType == '1'){
+			param.total = param.unitPrice * param.quantity;
+		}
+		if(param.productId == "" || param.productName == "" || param.unitPrice == "" || param.quantity == "" || param.total == "" || param.tracking == "" || param.buyType == ""){
+			alert("不能为空值");
 			return;
 		}
 		$.ajax({
@@ -187,8 +199,9 @@ $(function(){
 	        	$("#buy_s").val("");
 	        	$("#buy_t").val("");
 	        },
-	        error : function() {
+	        error : function(data) {
 	          alert("提交失败，请刷新重试！");
+	          console.error(data);
 	        }
 	     });
 	});

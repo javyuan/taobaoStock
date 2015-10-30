@@ -5,11 +5,11 @@ public class BuyBean extends BaseBean {
 	private int productId;
 	private String productName;
 	private int buyType;
-	private float unitPrice;
-	private float unitShipping;
+	private double unitPrice;
+	private double shipping;
 	private int quantity;
-	private float total;
-	private float unitCost;
+	private double total;
+	private double unitCost;
 	private String tracking;
 	private int trackStatus;
 	private String trackStatusDesc;
@@ -38,17 +38,17 @@ public class BuyBean extends BaseBean {
 	public void setBuyType(int buyType) {
 		this.buyType = buyType;
 	}
-	public float getUnitPrice() {
+	public double getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-	public float getUnitShipping() {
-		return unitShipping;
+	public double getShipping() {
+		return shipping;
 	}
-	public void setUnitShipping(float unitShipping) {
-		this.unitShipping = unitShipping;
+	public void setShipping(double shipping) {
+		this.shipping = shipping;
 	}
 	public int getQuantity() {
 		return quantity;
@@ -56,16 +56,16 @@ public class BuyBean extends BaseBean {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public float getTotal() {
+	public double getTotal() {
 		return total;
 	}
-	public void setTotal(float total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
-	public float getUnitCost() {
+	public double getUnitCost() {
 		return unitCost;
 	}
-	public void setUnitCost(float unitCost) {
+	public void setUnitCost(double unitCost) {
 		this.unitCost = unitCost;
 	}
 	public String getTracking() {

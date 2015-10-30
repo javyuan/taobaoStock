@@ -44,11 +44,13 @@ public class GreetingController {
 
     @RequestMapping(value = "/updateTrackStatus", method = RequestMethod.GET)
     @ResponseBody
-    public String updateTrackStatus(@RequestParam(value="id", required=true) int id,@RequestParam(value="pid", required=true) int productId,@RequestParam(value="q", required=true) int quantity, @RequestParam(value="t", required=true) int trackStatus) {
+    public String updateTrackStatus(@RequestParam(value="id", required=true) int id,@RequestParam(value="pid", required=true) int productId,@RequestParam(value="q", required=true) int quantity, @RequestParam(value="t", required=true) int trackStatus, @RequestParam(value="s") float shipping) {
     	BuyBean bean = new BuyBean();
     	bean.setId(id);
     	bean.setProductId(productId);
+    	bean.setQuantity(quantity);
     	bean.setTrackStatus(trackStatus);
+    	bean.setShipping(shipping*1000);
     	buyDao.tracking(bean);
     	return "success";
     }
