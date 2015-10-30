@@ -152,6 +152,7 @@ $(function(){
 		param.pid=$(this).parents("td").parent().find(".productId").val();
 		param.q=$(this).parents("td").parent().find(".quantity").val();
 		param.t=$(this).val();
+		param.s='0';
 		if(param.t == '3'){
 			param.s = prompt("请输入转运费用");
 			if(param.s == '' || param.s == null){
@@ -232,12 +233,10 @@ $(function(){
 	});
 })
 function hideTotal(){
-	var traget=document.getElementById("buy_total");
-	traget.style.display="none";
+	$("#buy_total").attr("hidden","hidden");
 }
 function showTotal(){
-	var traget=document.getElementById("buy_total");
-	traget.style.display="";
+	$("#buy_total").removeAttr("hidden");
 }
 </script>
 </html>
