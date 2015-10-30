@@ -62,14 +62,14 @@
 				<tr><td>购买方式:</td><td>
 					<fieldset data-role="controlgroup" data-type="horizontal">
 				        <input name="radio-choice-h-2" id="radio-choice-h-2a" type="radio" checked="checked" value="0" />
-				        <label for="radio-choice-h-2a" onclick="javascript:$('#buy_total').show();">直邮</label>
+				        <label for="radio-choice-h-2a" onclick="showTotal()">直邮</label>
 				        <input name="radio-choice-h-2" id="radio-choice-h-2b" type="radio" value="1" />
-				        <label for="radio-choice-h-2b" onclick="javascript:$('#buy_total').hide();">转运</label>
+				        <label for="radio-choice-h-2b" onclick="hideTotal()">转运</label>
 				    </fieldset>
 				</td></tr>
-				<tr><td>单价(美元):</td><td><input id="buy_up" type="text" /></td></tr>
+				<tr><td>单价(＄):</td><td><input id="buy_up" type="text" /></td></tr>
 				<tr><td>数量:</td><td><input id="buy_q" type="text" value="1"/></td></tr>
-				<tr id="buy_total"><td>总价(美元):</td><td><input id="buy_s" type="text" /></td></tr>
+				<tr id="buy_total"><td>总价(＄):</td><td><input id="buy_s" type="text" /></td></tr>
 				<tr><td>物流单号:</td><td><input id="buy_t" type="text" /></td></tr>
 				
 				<tr><td></td><td><input id="buy_submit" type="button" value="提交" /></td></tr>
@@ -231,5 +231,11 @@ $(function(){
 	     });
 	});
 })
+function hideTotal(){
+	$('#buy_total').hide();
+}
+function showTotal(){
+	$('#buy_total').show();
+}
 </script>
 </html>
